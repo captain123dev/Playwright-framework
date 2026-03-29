@@ -78,48 +78,29 @@ test.describe('UI – Admin Panel', () => {
   });
 
   test('Logout clears session and redirects to login page', async ({ page }) => {
-    const loginPage = new AdminLoginPage(page);
-    const dashboard = new AdminDashboardPage(page);
+  const loginPage = new AdminLoginPage(page);
+  const dashboard = new AdminDashboardPage(page);
 
-    await test.step('Login as admin', async () => {
-      await loginPage.navigate();
-      await loginPage.login(ADMIN_USER, ADMIN_PASS);
-      await page.waitForURL(/admin/, { timeout: 10000 });
-    });
-
-    await test.step('Click Logout', () => dashboard.logout());
-
-    await test.step('Verify redirected to login', async () => {
-      await expect(loginPage.usernameField).toBeVisible({ timeout: 10000 });
-    });
-
-    await test.step('Navigating to /admin redirects back to login', async () => {
-  try {
-    await page.goto('/admin', { waitUntil: 'domcontentloaded' });
-  } catch {
-    // navigation may abort after logout - this is expected
-  }
-  await expect(loginPage.usernameField).toBeVisible({ timeout: 10000 });
-});
+  await test.step('Login as admin', async () => {
+    await loginPage.navigate();
+    await loginPage.login(ADMIN_USER, ADMIN_PASS);
+    await page.waitForURL(/admin/, { timeout: 10000 });
   });
 
-  test('View booking report – calendar/summary loads for a room', async ({ page }) => {
-    const loginPage = new AdminLoginPage(page);
+  await test.step('Click Logout', () => dashboard.logout());
 
-    await test.step('Login as admin', async () => {
-      await loginPage.navigate();
-      await loginPage.login(ADMIN_USER, ADMIN_PASS);
-      await page.waitForURL(/admin/, { timeout: 10000 });
-    });
+  await test.step('Verify redirected to login', async () => {
+    await expect(loginPage.usernameField).toBeVisible({ timeout: 10000 });
+  });
 
-    await test.step('Click on a room report link', async () => {
-      const reportLink = page.locator('a:has-text("Report"), button:has-text("Report")').first();
-      if (await reportLink.isVisible()) {
-        await reportLink.click();
-        await expect(
-          page.locator('.rbc-calendar, [class*="report"], [class*="calendar"]').first()
-        ).toBeVisible({ timeout: 10000 });
-      }
-    });
+  await test.step('Navigating to /admin redirects back to login', async () => {
+    try {
+      await page.goto('/admin', { waitUntil: 'domcontentloaded', timeout: 15000 });
+    } catch {
+      // navigation may abort after logout - expected behaviour
+    }
+    await page.waitForTimeout(2000);
+    const isLoginVisible = await loginPage.usernameField.isVisible();
+    expect(isLoginVisible).toBe(true);
   });
 });

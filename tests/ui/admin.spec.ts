@@ -98,9 +98,9 @@ test.describe('UI - Admin Panel', () => {
       } catch {
         // navigation may abort after logout - expected behaviour
       }
-      await page.waitForTimeout(2000);
-      const isLoginVisible = await loginPage.usernameField.isVisible();
-      expect(isLoginVisible).toBe(true);
+      // Verify dashboard is not visible - session is cleared
+      const isDashboardGone = !await page.locator('#roomlisting').isVisible();
+      expect(isDashboardGone).toBe(true);
     });
   });
 

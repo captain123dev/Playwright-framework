@@ -8,6 +8,9 @@ Playwright-framework
 
 \### Restful-Booker Platform — QA Engineer Interview Assignment
 
+## Live Test Report
+[Click here to view Live Playwright Report](https://captain123dev.github.io/Playwright-framework/)
+
 
 
 !\[Playwright](https://img.shields.io/badge/Playwright-45ba4b?style=for-the-badge\&logo=playwright\&logoColor=white)
